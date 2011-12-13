@@ -199,6 +199,11 @@ class trellis {
             $nameb = array( $nameb );
         }
 
+        if ( ! is_object ( $this->func ) )
+        {
+            $this->func = new StdClass;
+        }
+
         while( list( , $name ) = each( $nameb ) )
         {
             if( ! $this->func->$name )
@@ -401,9 +406,11 @@ class trellis {
     {
         if ( ! $data ) return false;
 
+        $magic_quotes = version_compare(PHP_VERSION, '5.4') < 0 && get_magic_quotes_gpc();
+
         if ( $noquotes )
         {
-            if ( get_magic_quotes_gpc() )
+            if ( $magic_quotes )
             {
                 $data = htmlentities( $data, ENT_COMPAT, 'UTF-8' );
             }
@@ -414,7 +421,7 @@ class trellis {
         }
         else
         {
-            if ( get_magic_quotes_gpc() )
+            if ( $magic_quotes )
             {
                 $data = stripslashes( htmlentities( $data, ENT_QUOTES, 'UTF-8' ) );
             }
